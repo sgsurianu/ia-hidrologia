@@ -189,17 +189,19 @@ El experimento definitivo está en [`piloto_experimental.ipynb`](piloto_experime
 | tensorflow | 2.20.0 |
 | pyarrow | 18.1.0 |
 
-### Datos de entrada (no incluidos en el repositorio)
+### Datos de entrada
 
-Por confidencialidad institucional, los CSV de SAMA no se publican. El notebook espera:
+Los CSV públicos del experimento están en la raíz del repositorio:
 
 - `sn_1007_anomalias_detalle_nov.csv`
 - `sp_108_anomalias_detalle.csv`
 
+El notebook espera esos archivos en la ruta indicada al inicio.
+
 ### Ejecución
 
 1. Abrir `piloto_experimental.ipynb` en Colab o en un entorno local con GPU opcional (útil para LSTM/GRU).
-2. Colocar los CSV en la ruta indicada al inicio del notebook.
+2. Usar los CSV del repositorio (o copiarlos a la ruta que indique el notebook).
 3. Ejecutar las celdas en orden (auditoría → dataset → modelos → TEST → análisis hidrológico → exportación).
 
 Las configuraciones se congelan **antes** de calcular métricas de TEST. No debe hacerse *tuning* posterior sobre ese periodo.
@@ -210,14 +212,16 @@ Un resumen numérico del cierre experimental está en [`RESUMEN_FINAL_EXPERIMENT
 
 ```
 ia-hidrologia/
-├── piloto_experimental.ipynb     # Experimento definitivo (OE1–OE7)
-├── RESUMEN_FINAL_EXPERIMENTO.md  # Síntesis de resultados TEST
-├── v1.1_TFM.ipynb                # Exploración preliminar
+├── piloto_experimental.ipynb              # Experimento definitivo (OE1–OE7)
+├── sn_1007_anomalias_detalle_nov.csv      # Sensor de nivel (público)
+├── sp_108_anomalias_detalle.csv           # Pluviómetro (público)
+├── RESUMEN_FINAL_EXPERIMENTO.md           # Síntesis de resultados TEST
 ├── README.md
+├── web/                                   # Visor interactivo
 └── .gitignore
 ```
 
-Los datos de SAMA, modelos entrenados y salidas locales quedan fuera del control de versiones (`.gitignore` excluye `*.csv`, `*.parquet` y `data/`).
+Otros CSV, modelos entrenados y salidas locales siguen fuera del control de versiones (`.gitignore` excluye `*.csv` salvo los dos archivos públicos, `*.parquet` y `data/`).
 
 ## Limitaciones
 
@@ -247,7 +251,7 @@ Los datos de SAMA, modelos entrenados y salidas locales quedan fuera del control
 ## Licencia
 
 Código del TFE: **MIT**.  
-Los datos de SAMA siguen la política de datos del Sistema de Alerta y Monitoreo de Antioquia y no forman parte de esta licencia.
+Los CSV publicados (`sn_1007_anomalias_detalle_nov.csv`, `sp_108_anomalias_detalle.csv`) son datos públicos de SAMA y no forman parte de la licencia MIT.
 
 ## Visor web interactivo
 

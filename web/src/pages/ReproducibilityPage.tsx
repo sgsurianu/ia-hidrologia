@@ -43,7 +43,7 @@ export function ReproducibilityPage() {
             </a>
           </li>
           <li>
-            Los CSV de SAMA no se incluyen en el repositorio por confidencialidad institucional.
+            Los CSV públicos del experimento están en la raíz del repositorio: `sn_1007_anomalias_detalle_nov.csv` y `sp_108_anomalias_detalle.csv`.
           </li>
         </ul>
       </Section>

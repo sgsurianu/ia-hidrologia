@@ -11,6 +11,8 @@ venv/
 
 # Data
 *.csv
+!sn_1007_anomalias_detalle_nov.csv
+!sp_108_anomalias_detalle.csv
 *.parquet
 data/
 
