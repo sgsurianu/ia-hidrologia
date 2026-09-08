@@ -24,6 +24,8 @@ Thumbs.db
 *.swp
 
 # Web (Vite)
+.vercel
+web/.vercel
 web/node_modules/
 web/dist/
 web/.tmp-screenshots/

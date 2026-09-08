@@ -1,0 +1,6 @@
+V8.2.2.1_Fase 2_plantilla_grupal Septiembre_COM.docx
+web/node_modules
+web/dist
+web/.tmp-screenshots
+.vercel
+*.csv
