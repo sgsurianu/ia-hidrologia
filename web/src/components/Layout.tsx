@@ -1,5 +1,4 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
-import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
 import { SearchPalette } from './SearchPalette'
 import { RiverBackdrop } from './RiverBackdrop'
@@ -30,6 +29,10 @@ export function Layout() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [])
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [location.pathname])
 
   useEffect(() => {
     const el = headerRef.current
@@ -100,18 +103,7 @@ export function Layout() {
       </header>
 
       <main className="mx-auto w-full min-w-0 max-w-7xl overflow-x-clip px-4 py-6 md:px-6 md:py-10">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={location.pathname}
-            className="min-w-0 w-full"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+        <Outlet />
       </main>
 
       <footer className="border-t border-white/8 pb-[env(safe-area-inset-bottom)]">
