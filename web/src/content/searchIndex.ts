@@ -1,0 +1,15 @@
+export const searchItems = [
+  { id: 'inicio', label: 'Resultados del experimento', hint: 'Portada con filtros de horizonte y modelo', to: '/', keywords: ['inicio', 'resultados', 'mae'] },
+  { id: 'experimento', label: 'El experimento', hint: 'Pipeline y metodología', to: '/experimento', keywords: ['pipeline', 'metodología', 'test', 'walk-forward'] },
+  { id: 'datos', label: 'Datos', hint: 'SN_1007, SP_108, features', to: '/datos', keywords: ['sn_1007', 'sp_108', 'umbrales', 'features', 'oe1', 'oe2'] },
+  { id: 'modelos', label: 'Modelos', hint: 'Configuraciones congeladas', to: '/modelos', keywords: ['arima', 'xgboost', 'lstm', 'gru', 'random forest'] },
+  { id: 'res-1h', label: 'Resultados · 1 h', hint: 'Métricas globales TEST', to: '/?h=1h&v=global', keywords: ['1h', 'mae', 'tabla 20', 'xgboost'] },
+  { id: 'res-2h', label: 'Resultados · 2 h', hint: 'Métricas globales TEST', to: '/?h=2h&v=global', keywords: ['2h', 'tabla 21', 'random forest'] },
+  { id: 'res-3h', label: 'Resultados · 3 h', hint: 'Métricas globales TEST', to: '/?h=3h&v=global', keywords: ['3h', 'tabla 22'] },
+  { id: 'crecientes', label: 'Crecientes ≥ 20 cm', hint: 'Error en crecientes rápidas', to: '/?v=crecientes', keywords: ['crecientes', '20 cm', 'tabla 26'] },
+  { id: 'alertas-home', label: 'Alertas ROJO', hint: 'Vista de alertamiento en portada', to: '/?v=alertas', keywords: ['csi', 'rojo', 'pod', 'far'] },
+  { id: 'picos-home', label: 'Picos severos', hint: 'Vista de picos en portada', to: '/?v=picos', keywords: ['pico', '310'] },
+  { id: 'episodios', label: 'Episodios TEST', hint: '7 episodios ≥ 260 cm', to: '/eventos#episodios', keywords: ['episodio', 'mayo', 'junio', 'tabla 28'] },
+  { id: 'conclusiones', label: 'Conclusiones', hint: 'OE1–OE7 y recomendaciones', to: '/conclusiones', keywords: ['conclusiones', 'limitaciones', 'sama', 'oe7'] },
+  { id: 'repro', label: 'Reproducibilidad', hint: 'Entorno y semilla 42', to: '/reproducibilidad', keywords: ['reproducibilidad', 'seed', 'colab', 'tabla 19'] },
+]

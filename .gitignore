@@ -22,3 +22,10 @@ Thumbs.db
 .idea/
 .vscode/
 *.swp
+
+# Web (Vite)
+web/node_modules/
+web/dist/
+web/.tmp-screenshots/
+web/.env
+web/.env.*

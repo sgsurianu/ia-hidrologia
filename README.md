@@ -249,6 +249,18 @@ Los datos de SAMA, modelos entrenados y salidas locales quedan fuera del control
 Código del TFE: **MIT**.  
 Los datos de SAMA siguen la política de datos del Sistema de Alerta y Monitoreo de Antioquia y no forman parte de esta licencia.
 
+## Visor web interactivo
+
+Hay un visor React en [`web/`](web/) para explorar resultados por horizonte, modelos, eventos críticos y conclusiones:
+
+```bash
+cd web
+npm install
+npm run dev
+```
+
+Build estático (preparado para Vercel): `npm run build`.
+
 ## Referencias clave
 
 - Kratzert et al. (2024). *Global prediction of extreme floods in ungauged watersheds.* Nature.

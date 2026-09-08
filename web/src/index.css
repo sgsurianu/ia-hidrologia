@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+  --color-night: #061018;
+  --color-night-2: #0b1d28;
+  --color-cyan: #3ee0c8;
+  --color-cyan-2: #9ff3e6;
+  --color-foam: #e8f4f1;
+  --color-mist: #90a8b3;
+  --color-amber: #f4c16e;
+  --color-glass: rgba(12, 32, 42, 0.72);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    margin: 0;
+    color: var(--color-foam);
+    background: var(--color-night);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  button,
+  .btn {
+    touch-action: manipulation;
+  }
+  a {
+    color: var(--color-cyan-2);
+  }
+  ::selection {
+    background: color-mix(in srgb, var(--color-cyan) 40%, transparent);
+  }
+}
+
+@layer components {
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 7vw, 3.4rem);
+    font-weight: 560;
+    letter-spacing: -0.03em;
+    line-height: 1.08;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.15rem, 3vw, 1.35rem);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .card {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid rgba(158, 214, 204, 0.14);
+    border-radius: 1.35rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.02));
+    padding: 1rem;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(18px);
+  }
+  @media (min-width: 768px) {
+    .card {
+      padding: 1.35rem;
+    }
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.5rem;
+    border-radius: 999px;
+    border: 1px solid rgba(158, 214, 204, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 560;
+    color: var(--color-foam);
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+  }
+  .btn:hover {
+    border-color: rgba(62, 224, 200, 0.55);
+    background: rgba(62, 224, 200, 0.1);
+  }
+  .btn-active {
+    border-color: transparent;
+    background: linear-gradient(135deg, #2fd4bc, #1aa38f);
+    color: #04221c;
+  }
+  .btn-active:hover {
+    background: linear-gradient(135deg, #5ae3cf, #21b39b);
+    color: #04221c;
+  }
+  .table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid rgba(158, 214, 204, 0.12);
+    border-radius: 1rem;
+  }
+  table.data {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.8125rem;
+  }
+  @media (min-width: 768px) {
+    table.data {
+      font-size: 0.875rem;
+    }
+  }
+  table.data-fit {
+    table-layout: fixed;
+  }
+  table.data-fit td,
+  table.data-fit th {
+    overflow-wrap: anywhere;
+  }
+  table.data-fit th:first-child,
+  table.data-fit td:first-child {
+    width: 36%;
+  }
+  table.data-wide {
+    min-width: 36rem;
+  }
+  table.data-wide th,
+  table.data-wide td {
+    white-space: nowrap;
+  }
+  table.data th {
+    background: rgba(255, 255, 255, 0.04);
+    padding: 0.7rem 0.85rem;
+    font-weight: 600;
+    color: var(--color-cyan-2);
+  }
+  table.data td {
+    border-top: 1px solid rgba(158, 214, 204, 0.08);
+    padding: 0.7rem 0.85rem;
+    color: var(--color-foam);
+  }
+  table.data tr:hover td {
+    background: rgba(62, 224, 200, 0.05);
+  }
+  .reveal {
+    animation: rise 0.7s ease both;
+  }
+  .chip-scroll {
+    display: flex;
+    max-width: 100%;
+    gap: 0.35rem;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .chip-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.river-layer {
+  animation: drift 28s linear infinite;
+}
