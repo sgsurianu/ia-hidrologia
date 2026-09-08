@@ -6,160 +6,236 @@ Piloto experimental de predicción hidrométrica en la quebrada La Oca (Zaragoza
 Universidad Internacional de La Rioja (UNIR)  
 Tipo de trabajo: Piloto Experimental  
 Director: Joan Escamilla Fuster  
-Fecha: 24 de junio de 2026
+Fecha: 9 de septiembre de 2026
 
 ## Autores
 
 | Autor | Responsabilidad principal |
 |---|---|
 | Edgar José Aparicio Pérez | Auditoría de datos (OE1), modelos estadísticos (OE3) y ML (OE4) |
-| Eduardo José Daza Cuello | Estado del arte, modelos de Deep Learning (OE5) |
+| Eduardo José Daza Cuello | Estado del arte, modelos de Deep Learning (OE5), discusión |
 | Sebastián García Surianu | Dataset supervisado (OE2), resultados comparativos (OE6), coordinación con EAFIT |
 
 ## Resumen
 
-Este proyecto diseña, implementa y evalúa un piloto de predicción hidrométrica en la quebrada La Oca utilizando datos del sensor de nivel **SN107** y el pluviómetro **SP108** administrados por SAMA. El objetivo es anticipar el nivel futuro del cauce en horizontes de **1, 2 y 3 horas**, comparando bajo una estrategia de complejidad creciente la capacidad de modelos estadísticos, de Machine Learning y de Deep Learning frente a un baseline de persistencia.
+Este proyecto diseña, implementa y evalúa un piloto de predicción hidrométrica para la quebrada La Oca utilizando registros del sensor de nivel **SN_1007** y del pluviómetro **SP_108**, administrados por SAMA. El objetivo es anticipar el nivel del cauce en horizontes de **1, 2 y 3 horas**, comparando Persistencia, ARIMA, ARIMAX, Random Forest, XGBoost, LSTM y GRU.
 
-La metodología se articula en ocho pasos encadenados: auditoría de datos, construcción de un dataset supervisado, entrenamiento progresivo de modelos, evaluación con métricas hidrológicas, discusión de resultados, comparación con la literatura, análisis de viabilidad operativa e integración con SAMA. La validación sigue un esquema **walk-forward** para evitar fugas de información y reflejar el uso operacional real del sistema.
+A partir de un dataset supervisado con retardos de nivel y acumulados de precipitación, los modelos se evaluaron **fuera de muestra** sobre el periodo TEST. Los mejores resultados globales fueron:
 
-**Palabras clave:** predicción hidrométrica, alertas tempranas, SAMA, Machine Learning, Deep Learning.
+| Horizonte | Mejor MAE | Modelo | Mejora frente a Persistencia |
+|---|---|---|---|
+| 1 h | 1,354 cm | XGBoost | 35,7 % |
+| 2 h | 2,339 cm | Random Forest | 39,0 % |
+| 3 h | 3,465 cm | XGBoost | 36,3 % |
+
+No existe un modelo universalmente superior: Random Forest destacó en crecientes ≥ 20 cm, mientras que GRU fue especialmente relevante en alertamiento ROJO y picos severos a 3 horas. La principal limitación es la tendencia a subestimar crecientes rápidas y picos extremos.
+
+**Palabras clave:** predicción hidrométrica; alertas tempranas; SAMA; aprendizaje automático; aprendizaje profundo.
 
 ## Motivación
 
-Las inundaciones y crecientes súbitas representan una de las amenazas hidrometeorológicas de mayor impacto en Antioquia. SAMA integra sensores hidrometeorológicos, herramientas de análisis y mecanismos de comunicación para la gestión del riesgo, pero gran parte de su operación se basa en la observación de condiciones actuales y en umbrales predefinidos, lo que ofrece un tiempo de reacción limitado en cuencas de respuesta rápida.
+Las inundaciones y crecientes súbitas son una de las amenazas hidrometeorológicas de mayor impacto en Antioquia. SAMA integra sensores, análisis y comunicación para la gestión del riesgo, pero un sistema basado principalmente en la observación presente ofrece un margen limitado de anticipación en cuencas de respuesta rápida.
 
-La quebrada La Oca, en el municipio de Zaragoza, tiene antecedentes de inundaciones recurrentes y cuenta con instrumentación de SAMA. Este piloto evalúa si una capa predictiva basada en inteligencia artificial puede complementar —sin reemplazar— los mecanismos actuales de monitoreo y alerta.
+Este piloto evalúa si una capa predictiva basada en datos puede complementar —sin reemplazar— los mecanismos actuales de monitoreo y alerta.
 
 ### Pregunta de investigación
 
-¿En qué medida una capa predictiva basada en modelos estadísticos, de Machine Learning y de Deep Learning, entrenada con series temporales hidrometeorológicas de SAMA, permite anticipar el nivel hidrométrico futuro de la quebrada La Oca en horizontes de 1, 2 y 3 horas, frente a un enfoque basado únicamente en persistencia y umbrales operativos?
+¿En qué medida los modelos estadísticos, de Machine Learning y de Deep Learning, entrenados con las series temporales hidrometeorológicas disponibles de SAMA para la quebrada La Oca, permiten anticipar su nivel hidrométrico a horizontes de 1, 2 y 3 horas y mejorar el desempeño de un baseline de persistencia, tanto en condiciones generales como durante situaciones hidrológicamente críticas?
 
 ### Hipótesis
 
-La integración de modelos de aprendizaje automático y aprendizaje profundo, entrenados con series temporales hidrométricas y pluviométricas de SAMA, permite estimar el nivel futuro de la quebrada La Oca con un error inferior al producido por un baseline de persistencia, en horizontes de 1, 2 y 3 horas, aportando información complementaria utilizable para la activación preventiva de alertas tempranas.
+Los modelos estadísticos, de Machine Learning y de Deep Learning entrenados con series temporales hidrométricas y pluviométricas de SAMA pueden estimar el nivel futuro de la quebrada La Oca, en horizontes de 1, 2 y 3 horas, con un error inferior al producido por un baseline de persistencia, aportando capacidad predictiva adicional susceptible de ser evaluada como soporte potencial para sistemas de alerta temprana.
 
 ## Caso de estudio
 
 | Elemento | Detalle |
 |---|---|
-| Cuenca | Quebrada La Oca, municipio de Zaragoza (Antioquia, Colombia) |
-| Sensor de nivel | SN107 (SN_100740) — ~493.472 registros (may 2025 – jun 2026) |
-| Pluviómetro | SP108 (SP_10844) — ~96.938 registros (jun 2025 – jun 2026) |
-| Frecuencia nativa | 5 / 10 / 15 minutos |
-| Fuente de datos | API del Geoportal de SAMA |
-| Horizontes de predicción | 1 h, 2 h y 3 h |
+| Cuenca | Quebrada La Oca, Zaragoza (Antioquia, Colombia) |
+| Sensor de nivel | SN_1007 — 296.970 observaciones (10 nov 2025 – 10 jun 2026) |
+| Pluviómetro | SP_108 — periodo coincidente con SN_1007 (59.834 registros) |
+| Nivel observado | 210–413 cm (media 233,52 cm; P95 277 cm; P99 354 cm) |
+| Resolución experimental | Cuadrícula causal de 5 minutos |
+| Serie común | 61.207 intervalos (cobertura conjunta 97,11 %) |
+| Horizontes | 1 h, 2 h y 3 h (predicción directa, no recursiva) |
+| TEST | 9 may 2026 22:45 UTC – 10 jun 2026 |
+
+Los umbrales **260 / 310 / 350 cm** (AMARILLO / NARANJA / ROJO) se infirieron de las categorías del dataset. Tienen carácter experimental y deben confirmarse con el equipo de hidrología antes de usarse como umbrales operativos oficiales de SAMA.
 
 ## Objetivos
 
 ### Objetivo general
 
-Diseñar y evaluar un piloto experimental de predicción hidrométrica basado en inteligencia artificial, orientado a anticipar el nivel futuro de la quebrada La Oca en horizontes de 1, 2 y 3 horas, con el fin de analizar la capacidad de los modelos estadísticos, de Machine Learning y de Deep Learning para apoyar la generación temprana de alertas en SAMA.
+Diseñar, implementar y evaluar un piloto experimental de predicción hidrométrica basado en inteligencia artificial, orientado a anticipar el nivel futuro de la quebrada La Oca en horizontes de 1, 2 y 3 horas, con el fin de analizar la capacidad de los modelos estadísticos, de Machine Learning y de Deep Learning para apoyar la generación temprana de alertas en SAMA.
 
 ### Objetivos específicos
 
 | OE | Descripción |
 |---|---|
-| **OE1** | Caracterizar disponibilidad, calidad y cobertura de los datos hidrometeorológicos de SAMA |
-| **OE2** | Construir un dataset supervisado con lags de nivel y acumulados de lluvia |
-| **OE3** | Implementar modelos estadísticos baseline (persistencia, ARIMA, ARIMAX) |
-| **OE4** | Implementar modelos de Machine Learning (Random Forest, XGBoost) |
-| **OE5** | Implementar modelos de Deep Learning (LSTM, GRU) |
-| **OE6** | Comparar el desempeño mediante MAE, RMSE, NSE y KGE |
-| **OE7** | Determinar la viabilidad técnica de integrar el mejor modelo en SAMA |
+| **OE1** | Caracterizar disponibilidad, calidad, frecuencia, cobertura y continuidad de SN_1007 y SP_108 |
+| **OE2** | Construir un dataset supervisado causal con nivel y precipitación; targets a 1, 2 y 3 h |
+| **OE3** | Implementar baselines estadísticos: Persistencia, ARIMA y ARIMAX |
+| **OE4** | Implementar Random Forest y XGBoost, con selección de hiperparámetros en validación |
+| **OE5** | Implementar LSTM y GRU sobre secuencias temporales reales de nivel y precipitación |
+| **OE6** | Comparar los siete enfoques en TEST (MAE, RMSE, NSE, KGE) y analizar crecientes, alertas y picos |
+| **OE7** | Analizar utilidad potencial y limitaciones como apoyo futuro a SAMA |
 
 ## Metodología
 
-La estrategia experimental es **comparativa y progresiva**: cada modelo más complejo debe justificarse frente al anterior. La validación utiliza un esquema **walk-forward** que entrena con datos hasta el instante *t* y evalúa en *t+1*, *t+2* y *t+3*, evitando fugas de información del futuro al pasado.
+La estrategia es **comparativa y progresiva**. Las configuraciones se eligen solo con Train y Validation, se **congelan** y TEST se usa únicamente para la evaluación final fuera de muestra. No hay *shuffle* ni uso de información futura.
+
+Walk-forward se aplica específicamente a **ARIMA y ARIMAX**. Random Forest, XGBoost, LSTM y GRU se desarrollan con separación cronológica Train / Validation / TEST y purga temporal entre bloques.
 
 ### Pipeline
 
 ```
-📡 Datos SAMA
-    ↓
-🧹 Preprocesamiento (auditoría, limpieza, alineación temporal, features)
-    ↓
-🤖 Entrenamiento progresivo (persistencia → ARIMA → RF → XGBoost → LSTM → GRU)
-    ↓
-📊 Evaluación (MAE, RMSE, NSE, KGE por horizonte)
-    ↓
-🌍 Inferencia operacional
+1. Auditoría SN_1007 y SP_108
+        ↓
+2. Integración causal a 5 min y análisis de continuidad
+        ↓
+3. Datasets supervisados (tabulares y secuencias) + targets 1/2/3 h
+        ↓
+4. Split cronológico Train / Validation / TEST + purga
+        ↓
+5. Entrenamiento y selección de configuraciones (sin TEST)
+        ↓
+6. Congelación de configuraciones
+        ↓
+7. Evaluación fuera de muestra (mismos timestamps por horizonte)
+        ↓
+8. Análisis de crecientes, alertamiento, episodios y picos
 ```
 
-### Dataset supervisado
+### Representación de los datos
 
-**Variables predictoras:**
-- Lags de nivel: t-1, t-5, t-10, t-30, t-60 minutos
-- Acumulados de lluvia: 15 min, 1 h, 3 h
+**Modelos tabulares (Random Forest, XGBoost)** — 18 variables:
 
-**Variable objetivo:**
-- `nivel_t+60min`, `nivel_t+120min`, `nivel_t+180min`
+- Nivel actual y retardos: 5, 10, 15, 30 min; 1, 2 y 3 h
+- Cambios de nivel: 5, 15, 30 min y 1 h
+- Precipitación actual y acumulados: 15, 30 min; 1, 2 y 3 h
+
+**Redes recurrentes (LSTM, GRU):** secuencias reales de **37 pasos × 2 variables** (nivel y precipitación), equivalentes a 3 h de historia más el instante actual.
+
+**Targets independientes:** `nivel(t+12)`, `nivel(t+24)` y `nivel(t+36)` en la grilla de 5 min. No se usa predicción recursiva entre horizontes.
 
 ### Modelos evaluados
 
-| Familia | Modelos |
-|---|---|
-| Baseline | Persistencia |
-| Estadísticos | ARIMA, ARIMAX |
-| Machine Learning | Random Forest, XGBoost |
-| Deep Learning | LSTM, GRU |
-
-### Métricas de evaluación
-
-| Métrica | Sigla | Interpretación |
+| Familia | Modelos | Configuración definitiva |
 |---|---|---|
-| Error absoluto medio | MAE | Error medio en centímetros |
-| Raíz del error cuadrático medio | RMSE | Penaliza errores grandes |
-| Eficiencia de Nash-Sutcliffe | NSE | Eficiencia hidrológica (ideal = 1) |
-| Eficiencia de Kling-Gupta | KGE | Correlación, variabilidad y sesgo (ideal = 1) |
+| Baseline | Persistencia | ŷ(t+h) = y(t) |
+| Estadísticos | ARIMA, ARIMAX | ARIMA(2,1,1); precipitación antecedente causal en ARIMAX |
+| Machine Learning | Random Forest, XGBoost | `RF_sqrt`; `XGB_regularizado` |
+| Deep Learning | LSTM, GRU | 64 → 32 → Dense 32 → salida |
+
+### Métricas
+
+**Globales:** MAE, RMSE, NSE y KGE.
+
+**Complementarias (condiciones críticas):**
+
+- Crecientes rápidas: incremento futuro ≥ 20 cm
+- Alertamiento experimental: POD, FAR, CSI, F1 (umbrales 260 / 310 / 350 cm)
+- Picos: error en el instante exacto del máximo y máximo pronosticado durante el episodio
+
+## Resultados principales (TEST)
+
+Muestras TEST: 7.573 (1 h), 7.560 (2 h) y 7.547 (3 h).
+
+### MAE global (cm)
+
+| Modelo | 1 h | 2 h | 3 h |
+|---|---:|---:|---:|
+| XGBoost | **1,354** | 2,375 | **3,465** |
+| Random Forest | 1,370 | **2,339** | 3,491 |
+| LSTM | 1,489 | 2,769 | 4,066 |
+| GRU | 1,592 | 2,398 | 3,746 |
+| ARIMAX | 2,017 | 3,718 | 5,328 |
+| ARIMA | 2,031 | 3,721 | 5,330 |
+| Persistencia | 2,107 | 3,834 | 5,444 |
+
+### Mejor modelo según criterio
+
+| Criterio | 1 h | 2 h | 3 h |
+|---|---|---|---|
+| MAE global | XGBoost | Random Forest | XGBoost |
+| Crecientes ≥ 20 cm | Random Forest | Random Forest | Random Forest |
+| CSI ROJO | GRU | XGBoost | GRU |
+| Pico severo | Random Forest | XGBoost | GRU |
+
+### Hallazgos
+
+- Random Forest y XGBoost son los más consistentes a nivel global.
+- Random Forest tiene el menor error en crecientes ≥ 20 cm (MAE 17,08 / 29,01 / 37,47 cm).
+- GRU gana relevancia a 3 h en KGE, CSI ROJO y picos severos.
+- ARIMA y ARIMAX superan ligeramente a Persistencia; la precipitación lineal en ARIMAX aporta muy poco.
+- El error en crecientes es mucho mayor que el error global. La subestimación es sistemática (≈ 85–93 % de las crecientes).
+- En TEST hay evidencia limitada de extremos: **7** episodios ≥ 260 cm, **4** ≥ 310 cm y **2** ≥ 350 cm.
+
+El TFE **no** es un sistema operacional de alertas. Justifica una fase posterior de validación, en paralelo con los mecanismos actuales de SAMA.
+
+## Cómo reproducir el experimento
+
+El experimento definitivo está en [`piloto_experimental.ipynb`](piloto_experimental.ipynb) (34 celdas, pensado para Google Colab). Semilla: **42**.
+
+### Entorno de la ejecución final
+
+| Componente | Versión |
+|---|---|
+| Python | 3.12.13 |
+| numpy | 2.0.2 |
+| pandas | 2.2.2 |
+| scikit-learn | 1.6.1 |
+| statsmodels | 0.14.6 |
+| xgboost | 3.3.0 |
+| tensorflow | 2.20.0 |
+| pyarrow | 18.1.0 |
+
+### Datos de entrada (no incluidos en el repositorio)
+
+Por confidencialidad institucional, los CSV de SAMA no se publican. El notebook espera:
+
+- `sn_1007_anomalias_detalle_nov.csv`
+- `sp_108_anomalias_detalle.csv`
+
+### Ejecución
+
+1. Abrir `piloto_experimental.ipynb` en Colab o en un entorno local con GPU opcional (útil para LSTM/GRU).
+2. Colocar los CSV en la ruta indicada al inicio del notebook.
+3. Ejecutar las celdas en orden (auditoría → dataset → modelos → TEST → análisis hidrológico → exportación).
+
+Las configuraciones se congelan **antes** de calcular métricas de TEST. No debe hacerse *tuning* posterior sobre ese periodo.
+
+Un resumen numérico del cierre experimental está en [`RESUMEN_FINAL_EXPERIMENTO.md`](RESUMEN_FINAL_EXPERIMENTO.md).
 
 ## Estructura del repositorio
 
 ```
 ia-hidrologia/
-├── src/
-│   ├── data.py          # Descarga y auditoría de datos SAMA
-│   ├── features.py      # Generación de lags y acumulados
-│   ├── models.py        # Entrenamiento de modelos
-│   ├── evaluate.py      # Cálculo de métricas y tabla comparativa
-│   └── infer.py         # Inferencia operacional
-├── notebooks/           # Cuadernos exploratorios (EDA)
-├── tests/               # Pruebas unitarias
-├── config.yaml          # Configuración experimental y semillas
-├── requirements.txt     # Dependencias con versiones fijadas
-└── README.md
+├── piloto_experimental.ipynb     # Experimento definitivo (OE1–OE7)
+├── RESUMEN_FINAL_EXPERIMENTO.md  # Síntesis de resultados TEST
+├── v1.1_TFM.ipynb                # Exploración preliminar
+├── README.md
+└── .gitignore
 ```
 
-> Los datos de SAMA **no se incluyen** en el repositorio por criterios de confidencialidad institucional. Se proporciona un script de descarga (`src/data/download.py`) para replicar la adquisición con credenciales autorizadas.
+Los datos de SAMA, modelos entrenados y salidas locales quedan fuera del control de versiones (`.gitignore` excluye `*.csv`, `*.parquet` y `data/`).
 
-## Reproducibilidad
+## Limitaciones
 
-- Semillas aleatorias fijadas en `config.yaml` (`numpy`, `tensorflow`, `random`)
-- Versiones de librerías registradas en `requirements.txt`
-- Configuración experimental documentada en `config.yaml`
-- Commits atómicos con mensajes descriptivos en el historial de Git
+- Una sola cuenca y un TEST de aproximadamente un mes.
+- Pocos episodios severos independientes.
+- Un único pluviómetro: precipitación puntual, no espacial.
+- Vacíos en SP_108 (interrupción máxima ≈ 39,5 h).
+- Solo precipitación antecedente; no hay lluvia futura ni radar/pronóstico.
+- Umbrales de alerta inferidos, no oficiales.
 
-## Instalación
+## Trabajo futuro
 
-```bash
-# Clonar el repositorio
-git clone https://github.com/sgsurianu/ia-hidrologia.git
-cd ia-hidrologia
-
-# Crear entorno virtual
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-
-# Instalar dependencias
-pip install -r requirements.txt
-```
-
-## Líneas futuras
-
-1. **Fase 2** — Validación multicuenca en otras cuencas instrumentadas por SAMA
-2. **Fase 3** — Incorporación de radar meteorológico, GOES y pronósticos IDEAM
-3. **Fase 4** — Modelos híbridos HEC-RAS + IA
-4. **Fase 5** — Transformers para series temporales
-5. **Fase 6** — Graph Neural Networks (GNN)
+1. Nuevos periodos de observación y validación independiente
+2. Replicación del pipeline en otras cuencas de SAMA
+3. Más información meteorológica (pluviómetros, radar, satélite, pronósticos)
+4. Modelos orientados a extremos (pérdidas ponderadas, regímenes, probabilística)
+5. Ensembles e integración con modelos físicos (HEC-RAS / HEC-HMS)
+6. Arquitecturas avanzadas (Transformers, GNN) cuando haya más datos
 
 ## Contexto institucional
 
@@ -170,11 +246,14 @@ pip install -r requirements.txt
 
 ## Licencia
 
-Por definir.
+Código del TFE: **MIT**.  
+Los datos de SAMA siguen la política de datos del Sistema de Alerta y Monitoreo de Antioquia y no forman parte de esta licencia.
 
 ## Referencias clave
 
-- Kratzert et al. (2024) — Predicción de inundaciones con LSTM a escala global
-- Muñoz et al. (2021) — Machine Learning en cuencas andinas de respuesta rápida
-- Wang et al. (2023) — Revisión de Deep Learning en predicción de inundaciones
-- Nevo et al. (2022) — Sistema operacional de pronóstico de inundaciones de Google
+- Kratzert et al. (2024). *Global prediction of extreme floods in ungauged watersheds.* Nature.
+- Muñoz et al. (2021). *Flood early warning systems using machine learning techniques.* Hydrology.
+- Muñoz et al. (2018). *Flash-flood forecasting in an Andean mountain catchment.* Water.
+- Wang et al. (2023). *Is the LSTM model better than RNN for flood forecasting tasks?* Water.
+- Nevo et al. (2022). *Flood forecasting with machine learning models in an operational framework.* HESS.
+- Liu et al. (2025). *From RNNs to Transformers: Benchmarking deep learning architectures for hydrologic prediction.* HESS.
