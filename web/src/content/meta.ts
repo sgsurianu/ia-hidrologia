@@ -12,15 +12,18 @@ export const meta = {
   authors: [
     {
       name: 'Edgar José Aparicio Pérez',
-      role: 'Auditoría de datos (OE1), modelos estadísticos (OE3) y ML (OE4)',
+      role:
+        'Auditoría de datos (OE1), modelos de Machine Learning (OE4), revisión de dataset, Deep Learning y discusión',
     },
     {
       name: 'Eduardo José Daza Cuello',
-      role: 'Estado del arte, modelos de Deep Learning (OE5), discusión',
+      role:
+        'Modelos estadísticos baseline (OE3), modelos de Deep Learning (OE5), revisión de auditoría y resultados comparativos',
     },
     {
       name: 'Sebastián García Surianu',
-      role: 'Dataset supervisado (OE2), resultados comparativos (OE6), coordinación con EAFIT',
+      role:
+        'Construcción del dataset supervisado (OE2), resultados comparativos (OE6), coordinación técnica con EAFIT y revisión de modelos y discusión',
     },
   ],
   keywords: [

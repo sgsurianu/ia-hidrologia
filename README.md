@@ -12,9 +12,9 @@ Fecha: 9 de septiembre de 2026
 
 | Autor | Responsabilidad principal |
 |---|---|
-| Edgar José Aparicio Pérez | Auditoría de datos (OE1), modelos estadísticos (OE3) y ML (OE4) |
-| Eduardo José Daza Cuello | Estado del arte, modelos de Deep Learning (OE5), discusión |
-| Sebastián García Surianu | Dataset supervisado (OE2), resultados comparativos (OE6), coordinación con EAFIT |
+| Edgar José Aparicio Pérez | Auditoría de datos (OE1), modelos de Machine Learning (OE4), revisión de dataset, Deep Learning y discusión |
+| Eduardo José Daza Cuello | Modelos estadísticos baseline (OE3), modelos de Deep Learning (OE5), revisión de auditoría y resultados comparativos |
+| Sebastián García Surianu | Construcción del dataset supervisado (OE2), resultados comparativos (OE6), coordinación técnica con EAFIT y revisión de modelos y discusión |
 
 ## Resumen
 
